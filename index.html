@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><text y=%2224%22 font-size=%2224%22>⚽</text></svg>" />
+  <title>The Shootout Curse | Penalty Shootout Analytics (1990–2026)</title>
+  <meta name="description" content="Do defenders and tall players miss more penalties? Explore every Men's World Cup shootout kick (1990–2026) with interactive charts, scatter plots, and a penalty simulator." />
+  <meta property="og:title" content="The Shootout Curse: Penalty Shootout Analytics" />
+  <meta property="og:description" content="Exploring the correlation of player height and position with penalty shootout success in FIFA Men's World Cups (1990–2026)." />
+  <meta property="og:type" content="website" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- ════ Hero ════ -->
+    <header class="hero">
+      <div class="hero-pill">⚽ THE SHOOTOUT CURSE</div>
+      <h1 class="hero-title">Do Tall Players &amp; Defenders <em>Miss More?</em></h1>
+      <p class="hero-sub">Analyzing every penalty shootout kick across FIFA Men’s World Cups&nbsp;·&nbsp;1990–2026</p>
+    </header>
+
+    <!-- ════ Key Stats ════ -->
+    <section class="stats" aria-label="Key statistics">
+      <article class="stat-card reveal" id="stat-total">
+        <div class="stat-icon" aria-hidden="true">📊</div>
+        <div class="stat-body">
+          <div class="stat-number" data-target="377" id="counter-total">0</div>
+          <div class="stat-label">Total Kicks Analyzed</div>
+          <div class="stat-sub">1990 – 2026</div>
+        </div>
+      </article>
+      <article class="stat-card reveal" id="stat-rate">
+        <div class="stat-icon" aria-hidden="true">🎯</div>
+        <div class="stat-body">
+          <div class="stat-number" data-target="69.8" data-suffix="%" id="counter-rate">0%</div>
+          <div class="stat-label">Overall Success Rate</div>
+          <div class="stat-sub" id="stat-rate-detail">263 Scored · 114 Missed</div>
+        </div>
+      </article>
+      <article class="stat-card stat-card--danger reveal" id="stat-worst">
+        <div class="stat-icon" aria-hidden="true">📉</div>
+        <div class="stat-body">
+          <div class="stat-number" data-target="61.5" data-suffix="%" id="counter-worst">0%</div>
+          <div class="stat-label">Lowest Conversion</div>
+          <div class="stat-sub" id="stat-worst-detail">Very Tall Defenders ≥190cm</div>
+        </div>
+      </article>
+    </section>
+
+    <!-- ════ Charts: The Evidence ════ -->
+    <section class="evidence reveal" aria-label="Statistical evidence">
+      <div class="section-header">
+        <h2 class="section-title">The Evidence</h2>
+        <p class="section-sub">Position and height both correlate with penalty miss rates</p>
+      </div>
+      <div class="chart-pair">
+        <div class="card chart-card">
+          <h3 class="card-title">Conversion by Position</h3>
+          <p class="card-hint">Forwards convert nearly 10% more than defenders</p>
+          <div class="chart-wrap" id="chart-position" role="img" aria-label="Bar chart showing success rate by player position"></div>
+        </div>
+        <div class="card chart-card">
+          <h3 class="card-title">Conversion by Height</h3>
+          <p class="card-hint">Success drops steadily as height increases</p>
+          <div class="chart-wrap" id="chart-height" role="img" aria-label="Bar chart showing success rate by height group"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ Scatter Plot ════ -->
+    <section class="scatter-section reveal" aria-label="Height scatter plot">
+      <div class="card scatter-card">
+        <div class="scatter-header">
+          <div>
+            <h3 class="card-title">Every Kick, Plotted by Height</h3>
+            <p class="card-hint">Tap a dot to see player details. Red dots cluster above 190cm.</p>
+          </div>
+          <div class="legend" aria-hidden="true">
+            <span class="legend-item"><span class="legend-dot legend-dot--scored"></span> Scored</span>
+            <span class="legend-item"><span class="legend-dot legend-dot--missed"></span> Missed</span>
+          </div>
+        </div>
+        <div class="chart-wrap scatter-wrap" id="chart-scatter" role="img" aria-label="Scatter plot of every penalty kick by player height"></div>
+        <div id="scatter-tooltip" class="tooltip" hidden></div>
+      </div>
+    </section>
+
+    <!-- ════ Simulator ════ -->
+    <section class="sim-section reveal" aria-label="Penalty shootout simulator">
+      <div class="section-header">
+        <h2 class="section-title">Try It Yourself</h2>
+        <p class="section-sub">Configure a shooter and simulate a penalty kick based on historical data</p>
+      </div>
+      <div class="card sim-card">
+        <div class="sim-layout">
+          <div class="sim-controls">
+            <div class="field">
+              <label for="sim-position">Shooter Position</label>
+              <select id="sim-position">
+                <option value="FW">Forward / Striker</option>
+                <option value="MF">Midfielder</option>
+                <option value="DF" selected>Defender</option>
+              </select>
+            </div>
+            <div class="field">
+              <div class="field-row">
+                <label for="sim-height">Shooter Height</label>
+                <output id="sim-height-val" for="sim-height" class="field-output">193 cm</output>
+              </div>
+              <input type="range" id="sim-height" min="160" max="210" value="193" />
+              <div class="range-ticks">
+                <span>160</span><span>185</span><span>210</span>
+              </div>
+            </div>
+            <div class="sim-prob-panel">
+              <div class="sim-prob-label">Predicted Success</div>
+              <div class="sim-prob-value" id="sim-prob">61.5%</div>
+              <div class="sim-prob-tag" id="sim-tag">Very Tall Defender</div>
+            </div>
+            <button id="btn-simulate" class="btn btn--accent btn--full">
+              ⚽ Simulate Penalty Kick
+            </button>
+          </div>
+          <div class="sim-arena-wrap">
+            <div class="arena" id="arena">
+              <div class="arena-glow"></div>
+              <div class="goalpost">
+                <div class="net"></div>
+                <div class="goalkeeper" id="goalkeeper">🧤</div>
+              </div>
+              <div class="penalty-zone">
+                <div class="penalty-spot"></div>
+                <div class="ball" id="ball">⚽</div>
+              </div>
+              <div class="outcome-banner" id="outcome-banner"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ Data Explorer ════ -->
+    <section class="explorer reveal" aria-label="Historical kicks archive">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Full Archive</h2>
+          <p class="section-sub">Search and filter all Men’s World Cup shootout kicks</p>
+        </div>
+        <button class="btn btn--outline" id="btn-filters" aria-expanded="false" aria-controls="filters-panel">
+          🔍 Filters
+        </button>
+      </div>
+
+      <div class="card filters-card" id="filters-panel" hidden>
+        <div class="filters-grid">
+          <div class="field">
+            <label for="filter-search">Player</label>
+            <input type="search" id="filter-search" placeholder="e.g. Salah, Havertz…" />
+          </div>
+          <div class="field">
+            <label for="filter-position">Position</label>
+            <select id="filter-position">
+              <option value="all">All</option>
+              <option value="FW">Forwards</option>
+              <option value="MF">Midfielders</option>
+              <option value="DF">Defenders</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="filter-height">Height</label>
+            <select id="filter-height">
+              <option value="all">All</option>
+              <option value="short">&lt;175cm</option>
+              <option value="medium">175–184cm</option>
+              <option value="tall">185–189cm</option>
+              <option value="very-tall">≥190cm</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="filter-outcome">Outcome</label>
+            <select id="filter-outcome">
+              <option value="all">All</option>
+              <option value="scored">Scored</option>
+              <option value="missed">Missed</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Desktop table view -->
+      <div class="table-wrap" id="table-wrap">
+        <table class="data-table" id="data-table">
+          <thead>
+            <tr>
+              <th>Player</th>
+              <th>Height</th>
+              <th>Pos</th>
+              <th>Team</th>
+              <th>Opponent</th>
+              <th>Year</th>
+              <th>Result</th>
+            </tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
+
+      <!-- Mobile card view -->
+      <div class="cards-list" id="cards-list"></div>
+
+      <div class="pagination">
+        <span class="pagination-info" id="page-info">Showing 1–10 of 377</span>
+        <div class="pagination-nav">
+          <button class="btn btn--outline btn--sm" id="btn-prev" disabled>← Prev</button>
+          <span class="page-num" id="page-num">1</span>
+          <button class="btn btn--outline btn--sm" id="btn-next">Next →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ Footer ════ -->
+    <footer class="footer">
+      <p>&copy; 2026 Soccer Stats Lab · Data: Fjelstul World Cup Database &amp; Wikidata</p>
+    </footer>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
