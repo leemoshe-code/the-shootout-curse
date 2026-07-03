@@ -189,9 +189,10 @@ function computeStats() {
    Simulator
    ═══════════════════════════════════════════ */
 function calcProb(position, height) {
-  let base = 0.675;
-  if (position === 'FW') base = 0.754;
-  if (position === 'DF') base = 0.667;
+  let base = 0.681; // All Positions average (68.1%)
+  if (position === 'FW') base = 0.740;
+  if (position === 'MF') base = 0.664;
+  if (position === 'DF') base = 0.634;
 
   const penalty = (height - 180) * 0.0032;
   return Math.max(0.50, Math.min(0.85, base - penalty));
@@ -205,9 +206,9 @@ function updateSimulatorProb() {
   simProb.textContent = `${(prob * 100).toFixed(1)}%`;
 
   let hTag = h < 175 ? 'Short' : h < 185 ? 'Average' : h < 190 ? 'Tall' : 'Very Tall';
-  let pTag = pos === 'FW' ? 'Forward' : pos === 'MF' ? 'Midfielder' : 'Defender';
+  let pTag = pos === 'FW' ? 'Forward' : pos === 'MF' ? 'Midfielder' : pos === 'DF' ? 'Defender' : 'Player';
   simTag.textContent = `${hTag} ${pTag}`;
-  simTag.classList.toggle('danger', h >= 190 && pos === 'DF');
+  simTag.classList.toggle('danger', h >= 190 && (pos === 'DF' || pos === 'all'));
 }
 
 function runSimulation() {
