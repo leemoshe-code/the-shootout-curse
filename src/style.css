@@ -263,8 +263,9 @@ button, select, input { font: inherit; }
 }
 
 .stat-sub {
-  font-size: 0.75rem;
-  color: var(--text-3);
+  font-size: 0.8rem;
+  color: var(--text-2);
+  font-weight: 600;
   margin-top: 0.15rem;
 }
 
@@ -299,22 +300,24 @@ button, select, input { font: inherit; }
 .chart-grid { stroke: rgba(255, 255, 255, 0.04); stroke-width: 1; }
 
 .chart-label {
-  fill: var(--text-2);
+  fill: var(--text-1);
   font-family: var(--font-sans);
   font-size: 11px;
+  font-weight: 600;
 }
 
 .chart-value {
-  fill: var(--text-1);
+  fill: #fff;
   font-family: var(--font-mono);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 850;
 }
 
 .chart-count {
-  fill: rgba(255, 255, 255, 0.45);
+  fill: rgba(255, 255, 255, 0.75);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 9.5px;
+  font-weight: 600;
 }
 
 /* Bar entrance animation */
@@ -480,11 +483,51 @@ button, select, input { font: inherit; }
   border: 1px solid var(--border);
   border-radius: var(--radius-xs);
   color: var(--text-1);
-  font-size: 0.9rem;
+  font-size: 16px; /* Prevents iOS auto-zoom on focus */
   padding: 0.75rem 1rem;
   min-block-size: 44px;
   outline: none;
   transition: border-color 0.2s, background 0.2s;
+}
+
+/* Clear Search Container & Button */
+.search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.search-wrapper input {
+  width: 100%;
+  padding-inline-end: 2.5rem !important;
+}
+
+.btn-clear-search {
+  position: absolute;
+  inset-inline-end: 0.75rem;
+  background: transparent;
+  border: none;
+  color: var(--text-2);
+  font-size: 1.35rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  min-block-size: 36px;
+  min-inline-size: 36px;
+  transition: color 0.15s, transform 0.15s;
+}
+
+.btn-clear-search:hover {
+  color: var(--text-1);
+  transform: scale(1.1);
+}
+
+.btn-clear-search[hidden] {
+  display: none !important;
 }
 
 .field select:focus-visible,

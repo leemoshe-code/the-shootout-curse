@@ -163,7 +163,10 @@
         <div class="filters-grid">
           <div class="field">
             <label for="filter-search">Player</label>
-            <input type="search" id="filter-search" placeholder="e.g. Salah, Havertz…" />
+            <div class="search-wrapper">
+              <input type="search" id="filter-search" placeholder="e.g. Salah, Havertz…" />
+              <button type="button" id="btn-clear-search" class="btn-clear-search" aria-label="Clear search" hidden>&times;</button>
+            </div>
           </div>
           <div class="field">
             <label for="filter-position">Position</label>

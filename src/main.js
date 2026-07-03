@@ -32,11 +32,20 @@ const outcomeBanner = $('#outcome-banner');
 
 // Filters
 const filterSearch = $('#filter-search');
+const btnClearSearch = $('#btn-clear-search');
 const filterPosition = $('#filter-position');
 const filterHeight = $('#filter-height');
 const filterOutcome = $('#filter-outcome');
 const btnFilters = $('#btn-filters');
 const filtersPanel = $('#filters-panel');
+
+// Height Helper: Converts centimeters to standard feet/inches format
+function cmToFtIn(cm) {
+  const totalInches = Math.round(cm / 2.54);
+  const ft = Math.floor(totalInches / 12);
+  const in_ = totalInches % 12;
+  return `${ft}'${in_}"`;
+}
 
 // Table / Cards
 const tableBody = $('#table-body');
@@ -122,7 +131,6 @@ function setupEventListeners() {
   // Simulator
   simPosition.addEventListener('change', updateSimulatorProb);
   simHeight.addEventListener('input', () => {
-    simHeightVal.textContent = `${simHeight.value} cm`;
     updateSimulatorProb();
   });
   btnSimulate.addEventListener('click', runSimulation);
@@ -134,9 +142,20 @@ function setupEventListeners() {
     btnFilters.setAttribute('aria-expanded', String(open));
   });
 
+  // Filter clear search action
+  btnClearSearch.addEventListener('click', () => {
+    filterSearch.value = '';
+    btnClearSearch.hidden = true;
+    filterSearch.focus();
+    applyFilters();
+  });
+
   // Filter changes
   [filterSearch, filterPosition, filterHeight, filterOutcome].forEach((el) => {
     el.addEventListener(el.type === 'search' || el.tagName === 'INPUT' ? 'input' : 'change', () => {
+      if (el === filterSearch) {
+        btnClearSearch.hidden = !filterSearch.value;
+      }
       currentPage = 1;
       applyFilters();
     });
@@ -182,7 +201,7 @@ function computeStats() {
   const vtRate = ((vtScored / vtDef.length) * 100).toFixed(1);
 
   $('#counter-worst').dataset.target = vtRate;
-  $('#stat-worst-detail').textContent = `Very Tall Defenders ≥190cm (${vtScored}/${vtDef.length})`;
+  $('#stat-worst-detail').textContent = `Very Tall Defenders ≥6'3" / 190cm (${vtScored}/${vtDef.length})`;
 }
 
 /* ═══════════════════════════════════════════
@@ -204,6 +223,7 @@ function updateSimulatorProb() {
   const prob = calcProb(pos, h);
 
   simProb.textContent = `${(prob * 100).toFixed(1)}%`;
+  simHeightVal.textContent = `${cmToFtIn(h)} (${h} cm)`;
 
   let hTag = h < 175 ? 'Short' : h < 185 ? 'Average' : h < 190 ? 'Tall' : 'Very Tall';
   let pTag = pos === 'FW' ? 'Forward' : pos === 'MF' ? 'Midfielder' : pos === 'DF' ? 'Defender' : 'Player';
@@ -310,10 +330,10 @@ function getPositionData() {
 
 function getHeightData() {
   return [
-    { label: '<175cm', min: 0, max: 174 },
-    { label: '175–184cm', min: 175, max: 184 },
-    { label: '185–189cm', min: 185, max: 189 },
-    { label: '≥190cm', min: 190, max: 999 }
+    { label: 'Short (<5\'9")', min: 0, max: 174 },
+    { label: 'Medium (5\'9"–6\'0")', min: 175, max: 184 },
+    { label: 'Tall (6\'1"–6\'2")', min: 185, max: 189 },
+    { label: 'Very Tall (≥6\'3")', min: 190, max: 999 }
   ].map((b) => {
     const list = shootoutData.filter((k) => k.height >= b.min && k.height <= b.max);
     const scored = list.filter((k) => k.converted).length;
@@ -327,7 +347,7 @@ function renderBarChart(containerId, data, colors) {
   container.innerHTML = '';
 
   const W = 380, H = 40 + data.length * 46;
-  const pad = { top: 10, right: 30, bottom: 30, left: 100 };
+  const pad = { top: 10, right: 30, bottom: 30, left: 112 };
 
   let svg = `<svg viewBox="0 0 ${W} ${H}" width="100%" preserveAspectRatio="xMidYMid meet" role="presentation">`;
 
@@ -496,7 +516,7 @@ function showTooltipFor(dot, clientX, clientY) {
   tooltip.innerHTML = `
     <div class="tooltip-name">${item.player}</div>
     <div class="tooltip-row"><span>Position</span><span class="tooltip-val">${posName}</span></div>
-    <div class="tooltip-row"><span>Height</span><span class="tooltip-val">${item.height} cm</span></div>
+    <div class="tooltip-row"><span>Height</span><span class="tooltip-val">${cmToFtIn(item.height)} (${item.height} cm)</span></div>
     <div class="tooltip-row"><span>Team</span><span class="tooltip-val">${item.team}</span></div>
     <div class="tooltip-row"><span>Match</span><span class="tooltip-val" style="font-size:0.7rem">${item.match}</span></div>
     <div class="tooltip-row"><span>Year</span><span class="tooltip-val">${item.year}</span></div>
@@ -604,7 +624,7 @@ function renderTable(items) {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td class="td-player">${k.player}</td>
-      <td class="td-mono">${k.height}cm</td>
+      <td class="td-mono">${cmToFtIn(k.height)} <span style="font-size:0.75rem; color:var(--text-3)">(${k.height}cm)</span></td>
       <td><span class="pos-chip">${k.position}</span></td>
       <td>${k.team}</td>
       <td>${getOpponent(k)}</td>
@@ -635,7 +655,7 @@ function renderCards(items) {
       </div>
       <div class="kick-card-grid">
         <span>Position</span><span>${k.position}</span>
-        <span>Height</span><span>${k.height}cm</span>
+        <span>Height</span><span>${cmToFtIn(k.height)} (${k.height}cm)</span>
         <span>Team</span><span>${k.team}</span>
         <span>vs</span><span>${getOpponent(k)}</span>
         <span>Year</span><span>${k.year}</span>
