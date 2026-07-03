@@ -6,7 +6,9 @@ import './style.css';
    ═══════════════════════════════════════════ */
 // Filter to Men's World Cups only — women's height distributions skew the analysis
 const WOMENS_YEARS = new Set([1991, 1995, 1999, 2003, 2007, 2011, 2015, 2019, 2023]);
-const shootoutData = rawData.filter((k) => !WOMENS_YEARS.has(k.year));
+const shootoutData = rawData
+  .filter((k) => !WOMENS_YEARS.has(k.year))
+  .sort((a, b) => b.year - a.year);
 
 let filteredKicks = [...shootoutData];
 let currentPage = 1;
